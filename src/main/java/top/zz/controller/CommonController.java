@@ -64,22 +64,7 @@ public class CommonController implements ServletContextAware {
 		return "/common/index";
 	}
 
-	/**
-	 * 地区
-	 */
-	@RequestMapping(value = "/area", method = RequestMethod.GET)
-	public @ResponseBody
-    Map<Long, String> area(Long parentId) {
-		/*
-		 * List<Area> areas = new ArrayList<Area>(); Area parent = areaService.find(parentId); if (parent != null) { areas = new
-		 * ArrayList<Area>(parent.getChildren()); } else { areas = areaService.findRoots(); }
-		 */
-		Map<Long, String> options = new HashMap<Long, String>();
-		/*
-		 * for (Area area : areas) { options.put(area.getId(), area.getName()); }
-		 */
-		return options;
-	}
+
 
 	@RequestMapping(value = "/captchaImage", method = RequestMethod.GET)
 	public String captchaImage(HttpServletRequest request, HttpServletResponse response) throws Exception {
