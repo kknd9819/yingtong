@@ -8,4 +8,6 @@ import top.zz.model.User;
 public interface UserService {
 
    User findByUsername(String username);
+
+   void update(User user);
 }

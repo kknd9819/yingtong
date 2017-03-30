@@ -26,6 +26,7 @@ public class ShiroConfiguration {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         //拦截器
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
+        shiroFilterFactoryBean.setLoginUrl("/login.jsp");
 
         filterChainDefinitionMap.put("/logout","logout");
         //配置记住我或认证通过可以访问的地址

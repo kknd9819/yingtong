@@ -23,10 +23,16 @@ public class User implements Serializable{
     private String name;
     private String password;
     private String salt;
-    private byte state;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
+    private Boolean isEnabled;
     private Boolean isLocked;
+    private Integer loginFailureCount;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lockedDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date loginDate;
+    private String loginIp;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "t_user_role",joinColumns = {@JoinColumn(name = "uid")},inverseJoinColumns = {@JoinColumn(name = "roleId")})
     private List<Role> roleList;
@@ -37,22 +43,6 @@ public class User implements Serializable{
 
     public void setUid(Long uid) {
         this.uid = uid;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Boolean getLocked() {
-        return isLocked;
-    }
-
-    public void setLocked(Boolean locked) {
-        isLocked = locked;
     }
 
     public String getUsername() {
@@ -87,12 +77,60 @@ public class User implements Serializable{
         this.salt = salt;
     }
 
-    public byte getState() {
-        return state;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setState(byte state) {
-        this.state = state;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Boolean getEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        isEnabled = enabled;
+    }
+
+    public Boolean getLocked() {
+        return isLocked;
+    }
+
+    public void setLocked(Boolean locked) {
+        isLocked = locked;
+    }
+
+    public Integer getLoginFailureCount() {
+        return loginFailureCount;
+    }
+
+    public void setLoginFailureCount(Integer loginFailureCount) {
+        this.loginFailureCount = loginFailureCount;
+    }
+
+    public Date getLockedDate() {
+        return lockedDate;
+    }
+
+    public void setLockedDate(Date lockedDate) {
+        this.lockedDate = lockedDate;
+    }
+
+    public Date getLoginDate() {
+        return loginDate;
+    }
+
+    public void setLoginDate(Date loginDate) {
+        this.loginDate = loginDate;
+    }
+
+    public String getLoginIp() {
+        return loginIp;
+    }
+
+    public void setLoginIp(String loginIp) {
+        this.loginIp = loginIp;
     }
 
     public List<Role> getRoleList() {
@@ -104,9 +142,7 @@ public class User implements Serializable{
     }
 
     public String getCredentialsSalt(){
-
         return this.username+this.salt;
-
     }
 
 }
