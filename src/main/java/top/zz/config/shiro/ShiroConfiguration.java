@@ -1,14 +1,18 @@
 package top.zz.config.shiro;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.servlet.Filter;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,27 +28,34 @@ public class ShiroConfiguration {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         //设置安全管理器
         shiroFilterFactoryBean.setSecurityManager(securityManager);
+        shiroFilterFactoryBean.setLoginUrl("/login.jsp");
+        shiroFilterFactoryBean.setSuccessUrl("/index");
+        shiroFilterFactoryBean.setUnauthorizedUrl("/common/unauthorized");
         //拦截器
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
-        shiroFilterFactoryBean.setLoginUrl("/login.jsp");
-
         filterChainDefinitionMap.put("/logout","logout");
-        //配置记住我或认证通过可以访问的地址
-        filterChainDefinitionMap.put("/index", "user");
-        filterChainDefinitionMap.put("/", "user");
-
+        filterChainDefinitionMap.put("/login.jsp", "authc");
+        filterChainDefinitionMap.put("/admin/","anon");
+        filterChainDefinitionMap.put("/admin/common/captchaImage","anon");
         filterChainDefinitionMap.put("/**", "authc");
-        shiroFilterFactoryBean.setLoginUrl("/login");
-        shiroFilterFactoryBean.setSuccessUrl("/index");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/403");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+
+        Map<String,Filter> filters = new HashMap<String,Filter>();
+        filters.put("authc",authenticationFilter());
+        shiroFilterFactoryBean.setFilters(filters);
         return shiroFilterFactoryBean;
+    }
+
+    @Bean
+    public AuthenticationFilter authenticationFilter(){
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+        return authenticationFilter;
     }
 
     @Bean
     public SecurityManager securityManager(){
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
-        securityManager.setRealm(myShiroRealm());
+        securityManager.setRealm(authenticationRealm());
         //注入缓存管理器;
         securityManager.setCacheManager(ehCacheManager());
         //注入记住我管理器;
@@ -53,9 +64,9 @@ public class ShiroConfiguration {
     }
 
     @Bean
-    public MyShiroRealm myShiroRealm(){
-        MyShiroRealm myShiroRealm = new MyShiroRealm();
-        return myShiroRealm;
+    public AuthenticationRealm authenticationRealm(){
+        AuthenticationRealm authenticationRealm = new AuthenticationRealm();
+        return authenticationRealm;
     }
 
 
@@ -80,6 +91,14 @@ public class ShiroConfiguration {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
         return cookieRememberMeManager;
-
     }
+
+//    @Bean
+//    public MethodInvokingFactoryBean methodInvokingFactoryBean(){
+//        MethodInvokingFactoryBean methodInvokingFactoryBean = new MethodInvokingFactoryBean();
+//        methodInvokingFactoryBean.setStaticMethod("org.apache.shiro.SecurityUtils.setSecurityManager");
+//        methodInvokingFactoryBean.setArguments(new SecurityManager[0]);
+//        return methodInvokingFactoryBean;
+//    }
+
 }
