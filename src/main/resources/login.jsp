@@ -54,20 +54,20 @@ if (rsaService != null) {
 <meta name="author" content="生源科技" />
 <meta name="copyright" content="生源科技" />
  
-<link rel="stylesheet" href="/resources/css/login.css">
-<link rel="stylesheet" href="/resources/common/jqueryeasyui/themes/default/easyui.css">
+<link rel="stylesheet" href="/static/css/login.css">
+<link rel="stylesheet" href="/static/common/jqueryeasyui/themes/default/easyui.css">
 
-<script type="text/javascript" src="/resources/common/jquery/jquery.js"></script>
-<script type="text/javascript" src="/resources/common/jqueryeasyui/js/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="/resources/common/jqueryeasyui/js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/static/common/jquery/jquery.js"></script>
+<script type="text/javascript" src="/static/common/jqueryeasyui/js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/static/common/jqueryeasyui/js/easyui-lang-zh_CN.js"></script>
  
 	
-<script type="text/javascript" src="/resources/common/login/jsbn.js"></script>
-<script type="text/javascript" src="/resources/common/login/prng4.js"></script>
-<script type="text/javascript" src="/resources/common/login/rng.js"></script>
-<script type="text/javascript" src="/resources/common/login/rsa.js"></script>
-<script type="text/javascript" src="/resources/common/login/base64.js"></script>
-<script type="text/javascript" src="/resources/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/static/common/login/jsbn.js"></script>
+<script type="text/javascript" src="/static/common/login/prng4.js"></script>
+<script type="text/javascript" src="/static/common/login/rng.js"></script>
+<script type="text/javascript" src="/static/common/login/rsa.js"></script>
+<script type="text/javascript" src="/static/common/login/base64.js"></script>
+<script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
  
 <script type="text/javascript">
 	$().ready( function() {
@@ -167,7 +167,6 @@ if (rsaService != null) {
 		}
 	});
 </script>
- <%}%>
 </head>
 <body>
 	 

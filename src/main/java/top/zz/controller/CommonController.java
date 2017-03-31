@@ -35,18 +35,12 @@ import java.util.Map;
  */
 @Controller("commonController")
 @RequestMapping("/admin/common")
-public class CommonController implements ServletContextAware {
+public class CommonController {
 
 
 	@Resource
 	private Producer captchaProducer;
 
-	/** servletContext */
-	private ServletContext servletContext;
-
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
 
 	/**
 	 * 主页

@@ -1,52 +1,7 @@
-<%@page import="cn.shengyuan.tools.util.AES.AES64"%>
-<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8"%>
-<%@page import="java.security.interfaces.RSAPublicKey"%>
-<%@page import="org.apache.shiro.web.filter.authc.FormAuthenticationFilter"%>
-<%@page import="cn.shengyuan.tools.util.SpringUtil"%>
-<%@ page import="top.zz.service.RSAService" %>
-<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-<%
-String base = request.getContextPath();
-RSAService rsaService = SpringUtil.getBean("rsaServiceImpl", RSAService.class);
-if (rsaService != null) {
-%>
-<shiro:authenticated>
-<%
-response.sendRedirect(base + "/admin/common/main.jhtml");
-%>
-</shiro:authenticated>
-<%
-}
-%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<%
-if (rsaService != null) {
-	RSAPublicKey publicKey = rsaService.generateKey(request);
-	String modulus = AES64.encodeBase64String(publicKey.getModulus().toByteArray());
-	String exponent = AES64.encodeBase64String(publicKey.getPublicExponent().toByteArray());
-	
-	String message = null;
-	String loginFailure = (String) request.getAttribute(FormAuthenticationFilter.DEFAULT_ERROR_KEY_ATTRIBUTE_NAME);
-	if (loginFailure != null) {
-		if (loginFailure.equals("org.apache.shiro.authc.pam.UnsupportedTokenException")) {
-			message = "验证码输入错误";
-		} else if (loginFailure.equals("org.apache.shiro.authc.UnknownAccountException")) {
-			message = "此账号不存在";
-		} else if (loginFailure.equals("org.apache.shiro.authc.DisabledAccountException")) {
-			message = "此账号已被禁用";
-		} else if (loginFailure.equals("org.apache.shiro.authc.LockedAccountException")) {
-			message = "此账号已被锁定";
-		} else if (loginFailure.equals("org.apache.shiro.authc.IncorrectCredentialsException")) {
-			message = "密码错误，若连续5次密码错误账号将被锁定";
-		} else if (loginFailure.equals("org.apache.shiro.authc.AuthenticationException")) {
-			message = "账号认证失败";
-		}
-		request.setAttribute("message", message);
-	}
-%>
 <title>云生源登录后台</title>
 <meta http-equiv="expires" content="0" />
 <meta http-equiv="pragma" content="no-cache" />
@@ -117,7 +72,9 @@ if (rsaService != null) {
 			}
 			
 			var rsaKey = new RSAKey();
-			rsaKey.setPublic(b64tohex("<%=modulus%>"), b64tohex("<%=exponent%>"));
+			var modulus = $("#modulus").val();
+			var exponent = $("#exponent").val();
+			rsaKey.setPublic(b64tohex(modulus), b64tohex(exponent));
 			var enpassword = hex2b64(rsaKey.encrypt($password.val()));
 			$enPassword.val(enpassword);
 			$loginForm.submit();
@@ -161,13 +118,12 @@ if (rsaService != null) {
 			$("#right_hand").attr("style","right:-92px;top:-12px");
 		});
 		
-		 
-		if ('${message}' != null && '${message}' != '') {
-			$.messager.alert('登录', '${message}','error');
+		 var message = $("#message").val();
+		if (message != null && message != '') {
+			$.messager.alert('登录', message,'error');
 		}
 	});
 </script>
- <%}%>
 </head>
 <body>
 	 
@@ -182,14 +138,17 @@ if (rsaService != null) {
 			<p style="margin:10px 0 -20px 0;font-size:18px;font-weight:600;">云生源后台管理系统</p>
 			<p style="padding: 30px 0px 10px; position: relative;">
 				<span  class="u_logo"></span>         
-				<input id="username" name="username" class="ipt" type="text" placeholder="请输入用户名" value="" maxlength="20"> 
-   			</p>
+				<input id="username" name="username" class="ipt" type="text" placeholder="请输入用户名" value="" maxlength="20">
+				<input type="hidden" id="modulus" value="${modulus}" />
+                <input type="hidden" id="exponent" value="${exponent}" />
+                <input type="hidden" id="message" value="${message}" />
+			</p>
 			<p style="position: relative;"><span class="p_logo"></span>         
 				<input type="password" id="password" class="ipt" type="password" placeholder="请输入密码" value="" maxlength="20">   
 				<input type="hidden" id="enPassword" name="enPassword" />
   			</p>
   			<p style="padding:10px  0px 0px 0px; position: relative;"> 
-  				<img id="captchaImage" class="captchaImage" src="<%=base%>/admin/common/captchaImage.jhtml" width="120" height="38" valign="bottom" style="float:right; margin-right:31px;"> 
+  				<img id="captchaImage" class="captchaImage" src="/admin/common/captchaImage.jhtml" width="120" height="38" valign="bottom" style="float:right; margin-right:31px;">
   				<span class="p_yanzheng"></span>
   				<input id="captcha" name="captcha" class="ipt1" type="text" placeholder="请输入验证码" value="" maxlength="4">
    		  </p>
