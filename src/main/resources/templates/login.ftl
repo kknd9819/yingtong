@@ -9,20 +9,20 @@
 <meta name="author" content="生源科技" />
 <meta name="copyright" content="生源科技" />
  
-<link rel="stylesheet" href="${request.contextPath}/static/css/login.css">
-<link rel="stylesheet" href="${request.contextPath}/static/common/jqueryeasyui/themes/default/easyui.css">
+<link rel="stylesheet" href="/css/login.css">
+<link rel="stylesheet" href="/common/jqueryeasyui/themes/default/easyui.css">
 
-<script type="text/javascript" src="${request.contextPath}/static/common/jquery/jquery.js"></script>
-<script type="text/javascript" src="${request.contextPath}/static/common/jqueryeasyui/js/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="${request.contextPath}/static/common/jqueryeasyui/js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/common/jquery/jquery.js"></script>
+<script type="text/javascript" src="/common/jqueryeasyui/js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/common/jqueryeasyui/js/easyui-lang-zh_CN.js"></script>
  
 	
-<script type="text/javascript" src="${request.contextPath}/static/common/login/jsbn.js"></script>
-<script type="text/javascript" src="${request.contextPath}/static/common/login/prng4.js"></script>
-<script type="text/javascript" src="${request.contextPath}/static/common/login/rng.js"></script>
-<script type="text/javascript" src="${request.contextPath}/static/common/login/rsa.js"></script>
-<script type="text/javascript" src="${request.contextPath}/static/common/login/base64.js"></script>
-<script type="text/javascript" src="${request.contextPath}/static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="/common/login/jsbn.js"></script>
+<script type="text/javascript" src="/common/login/prng4.js"></script>
+<script type="text/javascript" src="/common/login/rng.js"></script>
+<script type="text/javascript" src="/common/login/rsa.js"></script>
+<script type="text/javascript" src="/common/login/base64.js"></script>
+<script type="text/javascript" src="/js/jquery.cookie.js"></script>
  
 <script type="text/javascript">
 	$().ready( function() {
