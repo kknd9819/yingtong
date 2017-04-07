@@ -3,19 +3,23 @@
  * Support: http://www.shopxx.net
  * License: http://www.shopxx.net/license
  */
-package top.zz.controller;
+package top.zz.controller.admin;
 
 import cn.shengyuan.tools.util.StringUtil;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.ServletContextAware;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,12 +36,26 @@ import java.util.Map;
  */
 @Controller("commonController")
 @RequestMapping("/admin/common")
-public class CommonController {
+public class CommonController implements ServletContextAware {
 
+	@Value("${system.name}")
+	private String systemName;
+	@Value("${system.version}")
+	private String systemVersion;
+	@Value("${system.description}")
+	private String systemDescription;
+	@Value("${system.show_powered}")
+	private Boolean systemShowPowered;
 
 	@Resource
 	private Producer captchaProducer;
 
+	/** servletContext */
+	private ServletContext servletContext;
+
+	public void setServletContext(ServletContext servletContext) {
+		this.servletContext = servletContext;
+	}
 
 	/**
 	 * 主页
@@ -53,10 +71,38 @@ public class CommonController {
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap model) {
 		Map<String, Object> options = new HashMap<String, Object>();
-		return "/index";
+		model.addAttribute("systemName", systemName);
+		model.addAttribute("systemVersion", systemVersion);
+		model.addAttribute("systemDescription", systemDescription);
+		model.addAttribute("systemShowPowered", systemShowPowered);
+		model.addAttribute("javaVersion", System.getProperty("java.version"));
+		model.addAttribute("javaHome", System.getProperty("java.home"));
+		model.addAttribute("osName", System.getProperty("os.name"));
+		model.addAttribute("osArch", System.getProperty("os.arch"));
+		model.addAttribute("serverInfo", servletContext.getServerInfo());
+		model.addAttribute("servletVersion", servletContext.getMajorVersion() + "." + servletContext.getMinorVersion());
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("receiverRead", false);
+		return "/common/index";
 	}
 
-
+	/**
+	 * 地区
+	 */
+	@RequestMapping(value = "/area", method = RequestMethod.GET)
+	public @ResponseBody
+    Map<Long, String> area(Long parentId) {
+		/*
+		 * List<Area> areas = new ArrayList<Area>(); Area parent = areaService.find(parentId); if (parent != null) { areas = new
+		 * ArrayList<Area>(parent.getChildren()); } else { areas = areaService.findRoots(); }
+		 */
+		Map<Long, String> options = new HashMap<Long, String>();
+		/*
+		 * for (Area area : areas) { options.put(area.getId(), area.getName()); }
+		 */
+		return options;
+	}
 
 	@RequestMapping(value = "/captchaImage", method = RequestMethod.GET)
 	public String captchaImage(HttpServletRequest request, HttpServletResponse response) throws Exception {

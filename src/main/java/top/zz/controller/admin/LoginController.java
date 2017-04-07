@@ -1,4 +1,4 @@
-package top.zz.controller;
+package top.zz.controller.admin;
 
 import cn.shengyuan.tools.util.AES.AES64;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
