@@ -1,9 +1,14 @@
 package top.zz.config.context;
 
+import cn.shengyuan.tools.util.SpringUtil;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.annotation.Order;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
 import java.util.Properties;
 
@@ -11,6 +16,7 @@ import java.util.Properties;
  * Created by X-man on 2017/3/30.
  */
 @Configuration
+@Order(value = 0)
 public class ApplicationContext {
 
     @Bean
@@ -33,4 +39,22 @@ public class ApplicationContext {
         defaultKaptcha.setConfig(config);
         return defaultKaptcha;
     }
+
+    @Bean
+    @Lazy(false)
+    public SpringUtil springUtil(){
+        SpringUtil springUtil = new SpringUtil();
+        return springUtil;
+    }
+
+    @Bean
+    public ThreadPoolTaskExecutor threadPoolTaskExecutor(){
+        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+        threadPoolTaskExecutor.setCorePoolSize(5);
+        threadPoolTaskExecutor.setMaxPoolSize(50);
+        threadPoolTaskExecutor.setQueueCapacity(100);
+        threadPoolTaskExecutor.setKeepAliveSeconds(60);
+        return threadPoolTaskExecutor;
+    }
+
 }

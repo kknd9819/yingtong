@@ -40,7 +40,7 @@ if (rsaService != null) {
 		} else if (loginFailure.equals("org.apache.shiro.authc.LockedAccountException")) {
 			message = "此账号已被锁定";
 		} else if (loginFailure.equals("org.apache.shiro.authc.IncorrectCredentialsException")) {
-			message = "密码错误，若连续5次密码错误账号将被锁定";
+			message = "密码错误，若连续 5 次密码错误账号将被锁定";
 		} else if (loginFailure.equals("org.apache.shiro.authc.AuthenticationException")) {
 			message = "账号认证失败";
 		}
@@ -167,6 +167,7 @@ if (rsaService != null) {
 		}
 	});
 </script>
+ <%}%>
 </head>
 <body>
 	 
@@ -193,7 +194,7 @@ if (rsaService != null) {
   				<input id="captcha" name="captcha" class="ipt1" type="text" placeholder="请输入验证码" value="" maxlength="4">
    		  </p>
 		 <div style="height: 50ppx; height:px;x; line-height: 50px; margin-top: 20px; border-top-color: rgb(231, 231, 231); border-top-width: 1px; border-top-style: solid;">
-			<p style="margin: 0px 35px 20px 45px;"><span style="float: left;"><input id="isRememberUsername" name="rememberMe" type="checkbox"  value="true" /> 记住我</span>
+			<p style="margin: 0px 35px 20px 45px;"><span style="float: left;"><input id="isRememberUsername" type="checkbox"  value="true" /> 记住用户名</span> 
            <span style="float: right;"> 
               <a id="loginButton" style="background: rgb(0, 142, 173); padding: 7px 20px; border-radius: 4px; border: 1px solid rgb(26, 117, 152); border-image: none; color: rgb(255, 255, 255); font-weight: bold;"  href="javascript:;">登录</a> 
            </span>        

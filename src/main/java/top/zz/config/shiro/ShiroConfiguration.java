@@ -1,11 +1,13 @@
 package top.zz.config.shiro;
 
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,15 +28,12 @@ public class ShiroConfiguration {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         //设置安全管理器
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setLoginUrl("/login");
+        shiroFilterFactoryBean.setLoginUrl("/login.jsp");
         shiroFilterFactoryBean.setSuccessUrl("/index");
         shiroFilterFactoryBean.setUnauthorizedUrl("/common/unauthorized");
         //拦截器
         Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
-        filterChainDefinitionMap.put("/logout","logout");
-        filterChainDefinitionMap.put("/admin/","anon");
-        filterChainDefinitionMap.put("/admin/common/captchaImage","anon");
-        filterChainDefinitionMap.put("/**","authc");
+        filterChainDefinitionMap.put("/**","anon");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         Map<String,Filter> filters = new HashMap<String,Filter>();
@@ -52,17 +51,31 @@ public class ShiroConfiguration {
     @Bean
     public SecurityManager securityManager(){
         DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
+        //注入领域
         securityManager.setRealm(authenticationRealm());
         //注入缓存管理器;
         securityManager.setCacheManager(ehCacheManager());
         //注入记住我管理器;
         securityManager.setRememberMeManager(rememberMeManager());
+        //注入会话管理器
+        securityManager.setSessionManager(defaultWebSessionManager());
         return securityManager;
+    }
+
+    @Bean
+    public HashedCredentialsMatcher hashedCredentialsMatcher(){
+        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        hashedCredentialsMatcher.setHashAlgorithmName("md5");
+        hashedCredentialsMatcher.setHashIterations(2);
+        return hashedCredentialsMatcher;
     }
 
     @Bean
     public AuthenticationRealm authenticationRealm(){
         AuthenticationRealm authenticationRealm = new AuthenticationRealm();
+        //注入凭证适配器
+        authenticationRealm.setAuthenticationCacheName("authorization");
+        authenticationRealm.setCredentialsMatcher(hashedCredentialsMatcher());
         return authenticationRealm;
     }
 
@@ -88,6 +101,14 @@ public class ShiroConfiguration {
         CookieRememberMeManager cookieRememberMeManager = new CookieRememberMeManager();
         cookieRememberMeManager.setCookie(rememberMeCookie());
         return cookieRememberMeManager;
+    }
+
+    @Bean
+    public DefaultWebSessionManager defaultWebSessionManager(){
+        DefaultWebSessionManager defaultWebSessionManager = new DefaultWebSessionManager();
+        defaultWebSessionManager.setGlobalSessionTimeout(600000);
+        defaultWebSessionManager.setDeleteInvalidSessions(true);
+        return defaultWebSessionManager;
     }
 
 //    @Bean

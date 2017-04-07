@@ -9,20 +9,20 @@
 <meta name="author" content="生源科技" />
 <meta name="copyright" content="生源科技" />
  
-<link rel="stylesheet" href="/resources/css/login.css">
-<link rel="stylesheet" href="/resources/common/jqueryeasyui/themes/default/easyui.css">
+<link rel="stylesheet" href="${request.contextPath}/static/css/login.css">
+<link rel="stylesheet" href="${request.contextPath}/static/common/jqueryeasyui/themes/default/easyui.css">
 
-<script type="text/javascript" src="/resources/common/jquery/jquery.js"></script>
-<script type="text/javascript" src="/resources/common/jqueryeasyui/js/jquery.easyui.min.js"></script>
-<script type="text/javascript" src="/resources/common/jqueryeasyui/js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="${request.contextPath}/static/common/jquery/jquery.js"></script>
+<script type="text/javascript" src="${request.contextPath}/static/common/jqueryeasyui/js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="${request.contextPath}/static/common/jqueryeasyui/js/easyui-lang-zh_CN.js"></script>
  
 	
-<script type="text/javascript" src="/resources/common/login/jsbn.js"></script>
-<script type="text/javascript" src="/resources/common/login/prng4.js"></script>
-<script type="text/javascript" src="/resources/common/login/rng.js"></script>
-<script type="text/javascript" src="/resources/common/login/rsa.js"></script>
-<script type="text/javascript" src="/resources/common/login/base64.js"></script>
-<script type="text/javascript" src="/resources/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="${request.contextPath}/static/common/login/jsbn.js"></script>
+<script type="text/javascript" src="${request.contextPath}/static/common/login/prng4.js"></script>
+<script type="text/javascript" src="${request.contextPath}/static/common/login/rng.js"></script>
+<script type="text/javascript" src="${request.contextPath}/static/common/login/rsa.js"></script>
+<script type="text/javascript" src="${request.contextPath}/static/common/login/base64.js"></script>
+<script type="text/javascript" src="${request.contextPath}/static/js/jquery.cookie.js"></script>
  
 <script type="text/javascript">
 	$().ready( function() {
@@ -47,7 +47,7 @@
 		
 		// 更换验证码
 		$captchaImage.click( function() {
-			$captchaImage.attr("src", "/admin/common/captchaImage.jhtml?timestamp=" + (new Date()).valueOf());
+			$captchaImage.attr("src", "/admin/common/captchaImage?timestamp=" + (new Date()).valueOf());
 		});
 		
 		// 表单验证、记住用户名
@@ -148,7 +148,7 @@
 				<input type="hidden" id="enPassword" name="enPassword" />
   			</p>
   			<p style="padding:10px  0px 0px 0px; position: relative;"> 
-  				<img id="captchaImage" class="captchaImage" src="/admin/common/captchaImage.jhtml" width="120" height="38" valign="bottom" style="float:right; margin-right:31px;">
+  				<img id="captchaImage" class="captchaImage" src="/admin/common/captchaImage" width="120" height="38" valign="bottom" style="float:right; margin-right:31px;">
   				<span class="p_yanzheng"></span>
   				<input id="captcha" name="captcha" class="ipt1" type="text" placeholder="请输入验证码" value="" maxlength="4">
    		  </p>
