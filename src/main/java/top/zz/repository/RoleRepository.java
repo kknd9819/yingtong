@@ -8,5 +8,4 @@ import top.zz.model.Role;
  */
 public interface RoleRepository extends JpaRepository<Role,Long> {
 
-
 }

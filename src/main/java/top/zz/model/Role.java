@@ -2,33 +2,49 @@ package top.zz.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
- * Created by X-man on 2017/3/30.
+ * Created by X-man on 2017/4/8.
  */
 @Entity
-@Table(name = "t_role")
-public class Role implements Serializable{
+@Table(name = "xx_role")
+public class Role implements Serializable {
+
 
     private static final long serialVersionUID = -253625885561218068L;
 
     @Id
     @GeneratedValue
-    private Long id; // 编号
-    private String role; // 角色标识程序中判断使用,如"admin",这个是唯一的:
-    private String description; // 角色描述,UI界面显示使用
-    private Boolean available = Boolean.FALSE; // 是否可用,如果不可用将不会添加给用户
+    private Long id;
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createDate;
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date modifyDate;
+    private String description;
+    @Column(nullable = false)
+    private Boolean isSystem;
+    @Column(nullable = false)
+    private String name;
+    private String code;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "xx_admin_role",joinColumns = {@JoinColumn(name = "roles")},inverseJoinColumns = {@JoinColumn(name = "admins")})
+    private List<Admin> admins;
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "xx_role_authority",joinColumns = {@JoinColumn(name = "roles")},inverseJoinColumns = {@JoinColumn(name = "authorities")})
+    private List<Authority> authorities;
 
-    //角色 -- 权限关系：多对多关系;
-    @ManyToMany(fetch= FetchType.EAGER)
-    @JoinTable(name="t_role_permission",joinColumns={@JoinColumn(name="roleId")},inverseJoinColumns={@JoinColumn(name="permissionId")})
-    private List<Permission> permissions;
 
-    // 用户 - 角色关系定义;
-    @ManyToMany
-    @JoinTable(name="t_user_role",joinColumns={@JoinColumn(name="roleId")},inverseJoinColumns={@JoinColumn(name="uid")})
-    private List<User> users;// 一个角色对应多个用户
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
+    }
 
     public Long getId() {
         return id;
@@ -38,12 +54,20 @@ public class Role implements Serializable{
         this.id = id;
     }
 
-    public String getRole() {
-        return role;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getModifyDate() {
+        return modifyDate;
+    }
+
+    public void setModifyDate(Date modifyDate) {
+        this.modifyDate = modifyDate;
     }
 
     public String getDescription() {
@@ -54,27 +78,35 @@ public class Role implements Serializable{
         this.description = description;
     }
 
-    public Boolean getAvailable() {
-        return available;
+    public Boolean getSystem() {
+        return isSystem;
     }
 
-    public void setAvailable(Boolean available) {
-        this.available = available;
+    public void setSystem(Boolean system) {
+        isSystem = system;
     }
 
-    public List<Permission> getPermissions() {
-        return permissions;
+    public String getName() {
+        return name;
     }
 
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public String getCode() {
+        return code;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public List<Admin> getAdmins() {
+        return admins;
+    }
+
+    public void setAdmins(List<Admin> admins) {
+        this.admins = admins;
     }
 }

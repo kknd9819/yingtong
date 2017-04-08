@@ -1,10 +1,6 @@
 package top.zz.controller.base;
 
-import cn.shengyuan.basic.model.Message;
-import cn.shengyuan.tools.util.DateUtil;
-import cn.shengyuan.tools.util.StringUtil;
-import cn.shengyuan.tools.util.WebToolKit;
-import cn.shengyuan.yun.admin.web.DateEditor;
+
 import org.apache.batik.transcoder.Transcoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
@@ -30,6 +26,10 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import top.zz.util.DateEditor;
+import top.zz.util.DateUtil;
+import top.zz.util.StringUtil;
+import top.zz.util.WebToolKit;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -170,7 +170,6 @@ public class BaseController extends BasePathController {
 	 * 导出成图片
 	 * @author 欧志辉
 	 * @date 2014-08-29
-	 * @param svg
 	 * @throws Exception 
 	 * @throws TranscoderException 
 	 */
@@ -335,7 +334,7 @@ public class BaseController extends BasePathController {
     		}
     		InputStream  in= new ByteArrayInputStream(output.toByteArray());
     		try {
-    			return downFile(IOUtils.toByteArray(in), fileName+DateUtil.dateToStringYYYYMMDD(new Date())+".xls");
+    			return downFile(IOUtils.toByteArray(in), fileName+ DateUtil.dateToStringYYYYMMDD(new Date())+".xls");
     		} catch (IOException e) {
     			e.printStackTrace();
     			return new ResponseEntity<String>(e.getLocalizedMessage(), getHttpHeaders(), HttpStatus.OK);

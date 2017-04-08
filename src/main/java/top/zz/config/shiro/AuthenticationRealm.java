@@ -7,11 +7,11 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import top.zz.model.Permission;
+import top.zz.model.Admin;
+import top.zz.model.Authority;
 import top.zz.model.Role;
-import top.zz.model.User;
 import top.zz.model.vo.Principal;
-import top.zz.service.UserService;
+import top.zz.service.AdminService;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -25,8 +25,8 @@ import java.util.Date;
 public class AuthenticationRealm extends AuthorizingRealm {
 
 	
-	@Resource(name = "userServiceImpl")
-	private UserService userService;
+	@Resource(name = "adminServiceImpl")
+	private AdminService adminService;
 
 	/**
 	 * 获取认证信息
@@ -56,44 +56,44 @@ public class AuthenticationRealm extends AuthorizingRealm {
 		
 		
 		if (username != null && password != null) {
-			User user = userService.findByUsername(username);
-			if (user == null) {
+			Admin admin = adminService.findByUsername(username);
+			if (admin == null) {
 				throw new UnknownAccountException();
 			}
-			if (!user.getEnabled()) {
+			if (!admin.getEnabled()) {
 				throw new DisabledAccountException();
 			}
-			if (user.getLocked()) {
+			if (admin.getLocked()) {
 				int loginFailureLockTime = 10;
 				if (loginFailureLockTime == 0) {
 					throw new LockedAccountException();
 				}
-				Date lockedDate = user.getLockedDate();
+				Date lockedDate = admin.getLockedDate();
 				Date unlockDate = DateUtils.addMinutes(lockedDate, loginFailureLockTime);
 				if (new Date().after(unlockDate)) {
-					user.setLoginFailureCount(0);
-					user.setLocked(false);
-					user.setLockedDate(null);
-					userService.update(user);
+					admin.setLoginFailureCount(0);
+					admin.setLocked(false);
+					admin.setLockedDate(null);
+					adminService.update(admin);
 				} else {
 					throw new LockedAccountException();
 				}
 			}
-			if (!DigestUtils.md5Hex(password).equals(user.getPassword())) {
-				int loginFailureCount = user.getLoginFailureCount() + 1;
+			if (!DigestUtils.md5Hex(password).equals(admin.getPassword())) {
+				int loginFailureCount = admin.getLoginFailureCount() + 1;
 				if (loginFailureCount >= 5) {
-					user.setLocked(true);
-					user.setLockedDate(new Date());
+					admin.setLocked(true);
+					admin.setLockedDate(new Date());
 				}
-				user.setLoginFailureCount(loginFailureCount);
-				userService.update(user);
+				admin.setLoginFailureCount(loginFailureCount);
+				adminService.update(admin);
 				throw new IncorrectCredentialsException();
 			}
-			user.setLoginIp(ip);
-			user.setLoginDate(new Date());
-			user.setLoginFailureCount(0);
-			userService.update(user);
-			return new SimpleAuthenticationInfo(new Principal(user.getUid(), username, user.getName()), password, getName());
+			admin.setLoginIp(ip);
+			admin.setLoginDate(new Date());
+			admin.setLoginFailureCount(0);
+			adminService.update(admin);
+			return new SimpleAuthenticationInfo(new Principal(admin.getId(), username, admin.getName()), password, getName());
 		}
 		throw new UnknownAccountException();
 	}
@@ -106,11 +106,11 @@ public class AuthenticationRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-		User user = (User) principals.getPrimaryPrincipal();
-		for(Role role:user.getRoleList()){
-			authorizationInfo.addRole(role.getRole());
-			for(Permission permission:role.getPermissions()){
-				authorizationInfo.addStringPermission(permission.getPermission());
+		Admin admin = (Admin) principals.getPrimaryPrincipal();
+		for(Role role :admin.getRoles()){
+			authorizationInfo.addRole(role.getName());
+			for(Authority authority: role.getAuthorities()){
+				authorizationInfo.addStringPermission(authority.getName());
 			}
 		}
 		return authorizationInfo;
